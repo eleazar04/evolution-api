@@ -9,10 +9,22 @@ LABEL contact="contato@evolution-api.com"
 
 WORKDIR /evolution
 
+COPY package*.json ./
+COPY ./prisma ./prisma
+COPY ./tsup.config.ts ./
+
+RUN npm ci --silent
+RUN npx prisma generate    # ← Explícito aquí
+
+COPY ./src ./src
+RUN npm run build
+
+CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
 COPY ./package*.json ./
 COPY ./tsconfig.json ./
 COPY ./tsup.config.ts ./
 
+COPY ./prisma ./prisma
 RUN npm ci --silent
 
 COPY ./src ./src
