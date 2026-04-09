@@ -138,28 +138,4 @@
     "@types/mime-types": "^2.1.4",
     "@types/node": "^24.5.2",
     "@types/node-cron": "^3.0.11",
-    "@types/qrcode": "^1.5.5",
-    "@types/qrcode-terminal": "^0.12.2",
-    "@typescript-eslint/eslint-plugin": "^8.44.0",
-    "@typescript-eslint/parser": "^8.44.0",
-    "commitizen": "^4.3.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.45.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.6",
-    "prettier": "^3.4.2",
-    "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.20.5",
-    "typescript": "^5.7.2"
-  }
-},
-{
-  "scripts": {
-    "build": "tsup",
-    "start": "node dist/index.js"
-  }
-}
+    "@types/qrcode": "^1.5.
