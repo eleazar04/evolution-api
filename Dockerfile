@@ -13,6 +13,7 @@ COPY package*.json ./
 COPY ./prisma ./prisma
 COPY ./tsup.config.ts ./
 
+COPY ./prisma ./prisma
 RUN npm ci --silent
 RUN npx prisma generate    # ← Explícito aquí
 
