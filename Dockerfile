@@ -9,24 +9,27 @@ LABEL contact="contato@evolution-api.com"
 
 WORKDIR /evolution
 
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Debug: ver qué archivos existen
 COPY package*.json ./
 COPY ./prisma ./prisma
 COPY ./tsup.config.ts ./
 
-COPY ./prisma ./prisma
-RUN npm ci --silent
-RUN npx prisma generate    # ← Explícito aquí
+RUN ls -la
+RUN ls -la prisma/
+
+# ⬇️ SIN --silent ⬇️
+RUN npm ci
+
+RUN npx prisma generate
 
 COPY ./src ./src
 RUN npm run build
 
 CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
-COPY ./package*.json ./
-COPY ./tsconfig.json ./
-COPY ./tsup.config.ts ./
-
-COPY ./prisma ./prisma
-RUN npm ci --silent
 
 COPY ./src ./src
 COPY ./public ./public
