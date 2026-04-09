@@ -21,7 +21,6 @@ COPY ./tsup.config.ts ./
 RUN ls -la
 RUN ls -la prisma/
 
-# ⬇️ SIN --silent ⬇️
 RUN npm ci
 
 RUN npx prisma generate
