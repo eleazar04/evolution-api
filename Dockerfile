@@ -13,22 +13,55 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Debug: ver qué archivos existen
+# ==========================================
+# ETAPA 1: BUILDER (Aquí falla)
+# ==========================================
+FROM node:20-alpine AS builder
+
+WORKDIR /evolution
+
+# 1. Copiar package.json
 COPY package*.json ./
-COPY ./prisma ./prisma
-COPY ./tsup.config.ts ./
 
-RUN ls -la
-RUN ls -la prisma/
+# 2. Copiar Prisma ANTES de instalar
+COPY prisma ./prisma
 
+# 3. Instalar SIN --silent para ver el error real
 RUN npm ci
 
+# 4. Generar Prisma
 RUN npx prisma generate
 
-COPY ./src ./src
+# 5. Copiar todo el código fuente
+COPY . .
+
+# 6. Compilar el proyecto
 RUN npm run build
 
-CMD ["sh", "-c", "npx prisma migrate deploy && npm start"]
+# ==========================================
+# ETAPA 2: FINAL (La que muestra tus logs)
+# ==========================================
+FROM node:20-alpine
+
+WORKDIR /evolution
+
+# Instalar dependencias necesarias en producción (ej. openssl)
+RUN apk add --no-cache openssl
+
+# Copiar archivos desde la etapa builder
+COPY --from=builder /evolution/package*.json ./
+COPY --from=builder /evolution/prisma ./prisma
+COPY --from=builder /evolution/dist ./dist
+COPY --from=builder /evolution/node_modules ./node_modules
+COPY --from=builder /evolution/public ./public
+COPY --from=builder /evolution/.env ./.env
+COPY --from=builder /evolution/Docker ./Docker
+COPY --from=builder /evolution/tsup.config.ts ./tsup.config.ts
+COPY --from=builder /evolution/runWithProvider.js ./runWithProvider.js
+COPY --from=builder /evolution/manager ./manager
+
+# Ejecutar migraciones y arrancar
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/src/main.js"]
 
 COPY ./src ./src
 COPY ./public ./public
