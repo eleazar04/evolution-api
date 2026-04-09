@@ -156,4 +156,10 @@
     "tsx": "^4.20.5",
     "typescript": "^5.7.2"
   }
+},
+{
+  "scripts": {
+    "build": "tsup",
+    "start": "node dist/index.js"
+  }
 }
